@@ -78,123 +78,122 @@ const UserController = {
     }
   },
 
-  // // Additional UserController methods can be added here, such as fetching user data by ID.
-  // user: async (req, res) => {
-  //   try {
-  //     const userId = req.userId; // Assuming you have middleware to extract the userId from the token
+  // Additional UserController methods can be added here, such as fetching user data by ID.
+  user: async (req, res) => {
+    try {
+      // Assuming you have a way to identify the user, such as a user ID in the request
+      const userId = req.userId; // Adjust this based on your authentication method
   
-  //     // Fetch user data by userId
-  //     const user = await User.findById(userId);
+      // Fetch user data from your database
+      const user = await User.findById(userId);
   
-  //     if (!user) {
-  //       return res.status(404).json({ message: 'User not found' });
-  //     }
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
   
-  //     // Send user data (excluding sensitive fields like password)
-  //     res.status(200).json({ username: user.username, email: user.email });
-  //   } catch (error) {
-  //     console.error('Fetch user data error:', error);
-  //     res.status(500).json({ message: 'Internal server error' });
-  //   }
-  // },
+      // Send the user data in the response
+      res.status(200).json(user);
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  },
+  // Delete a user by ID
+  deleteUserById: async (req, res) => {
+    try {
+      const { id } = req.params;
   
+      // Check if the provided ID is valid
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ error: "Invalid user ID" });
+      }
   
-  // // Delete a user by ID
-  // deleteUserById: async (req, res) => {
-  //   try {
-  //     const { id } = req.params;
+      // Find the user by ID
+      const user = await User.findByIdAndRemove(id);
   
-  //     // Check if the provided ID is valid
-  //     if (!mongoose.Types.ObjectId.isValid(id)) {
-  //       return res.status(400).json({ error: "Invalid user ID" });
-  //     }
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
   
-  //     // Find the user by ID
-  //     const user = await User.findByIdAndRemove(id);
+      res.status(200).json({ message: "User deleted successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  },
+  // GET a single user by ID
+  getUserById: async (req, res) => {
+    try {
+      const { id } = req.params;
   
-  //     if (!user) {
-  //       return res.status(404).json({ error: "User not found" });
-  //     }
+      // Check if the provided ID is valid
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ error: 'Invalid user ID' });
+      }
   
-  //     res.status(200).json({ message: "User deleted successfully" });
-  //   } catch (error) {
-  //     console.error(error);
-  //     res.status(500).json({ error: "Internal server error" });
-  //   }
-  // },
-  // // GET a single user by ID
-  // getUserById: async (req, res) => {
-  //   try {
-  //     const { id } = req.params;
+      // Find the user by ID
+      const user = await User.findById(id);
   
-  //     // Check if the provided ID is valid
-  //     if (!mongoose.Types.ObjectId.isValid(id)) {
-  //       return res.status(400).json({ error: 'Invalid user ID' });
-  //     }
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
   
-  //     // Find the user by ID
-  //     const user = await User.findById(id);
+      res.status(200).json(user);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  },
+  // GET all users
+  getAllUsers: async (req, res) => {
+    try {
+      // Find all users in the database
+      const users = await User.find();
   
-  //     if (!user) {
-  //       return res.status(404).json({ error: 'User not found' });
-  //     }
-  
-  //     res.status(200).json(user);
-  //   } catch (error) {
-  //     console.error(error);
-  //     res.status(500).json({ error: 'Internal server error' });
-  //   }
-  // },
-  // // GET all users
-  // getAllUsers: async (req, res) => {
-  //   try {
-  //     // Find all users in the database
-  //     const users = await User.find();
-  
-  //     res.status(200).json(users);
-  //   } catch (error) {
-  //     console.error(error);
-  //     res.status(500).json({ error: 'Internal server error' });
-  //   }
-  // },
+      res.status(200).json(users);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  },
 
-  //   // Update user by ID
-  //   updateUserById: async (req, res) => {
-  //     try {
-  //       const { id } = req.params;
-  //       const { name, email, password } = req.body;
+    // Update user by ID
+    updateUserById: async (req, res) => {
+      try {
+        const { id } = req.params;
+        const { name, email, password } = req.body;
   
-  //       // Check if the provided ID is valid
-  //       if (!mongoose.Types.ObjectId.isValid(id)) {
-  //         return res.status(400).json({ error: "Invalid user ID" });
-  //       }
+        // Check if the provided ID is valid
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+          return res.status(400).json({ error: "Invalid user ID" });
+        }
   
-  //       // Find the user by ID
-  //       const user = await User.findById(id);
+        // Find the user by ID
+        const user = await User.findById(id);
   
-  //       if (!user) {
-  //         return res.status(404).json({ error: "User not found" });
-  //       }
+        if (!user) {
+          return res.status(404).json({ error: "User not found" });
+        }
   
-  //       // Update user properties
-  //       if (name) user.name = name;
-  //       if (email) user.email = email;
+        // Update user properties
+        if (name) user.name = name;
+        if (email) user.email = email;
   
-  //       // Check if a new password is provided and hash it
-  //       if (password) {
-  //         const hashedPassword = await bcrypt.hash(password, 10);
-  //         user.password = hashedPassword;
-  //       }
+        // Check if a new password is provided and hash it
+        if (password) {
+          const hashedPassword = await bcrypt.hash(password, 10);
+          user.password = hashedPassword;
+        }
   
-  //       // Save the updated user
-  //       const updatedUser = await user.save();
+        // Save the updated user
+        const updatedUser = await user.save();
   
-  //       res.status(200).json({ message: "User updated successfully", user: updatedUser });
-  //     } catch (error) {
-  //       console.error(error);
-  //       res.status(500).json({ error: "Internal server error" });
-  //     }
-  //   },
+        res.status(200).json({ message: "User updated successfully", user: updatedUser });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal server error" });
+      }
+    },
   
   // Middleware to protect routes with JWT
   protectRoute: (req, res, next) => {

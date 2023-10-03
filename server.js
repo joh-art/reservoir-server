@@ -7,7 +7,7 @@ const usersRoutes = require("./Routes/UsersRoutes");
 const Room = require("./Models/RoomModel");
 const Roomsroute = require("./Routes/Roomsroute");
 const User = require("./Models/UserModel");
-const Booking = require("../server/Models/Booking"); // Import your Booking
+const Booking = require("../reservoir-server/Models/Booking"); // Import your Booking
 const { v4: uuidv4 } = require("uuid");
 const stripe = require("stripe")(
   "sk_test_51Nuc3DIW3dHV2cj5jUqd53aIJs0FBtpaXKCNeOjFBbvtuoOsJPpf41zYiTkArab3mr1tLPd3mNPO2kCjWY9dhvUm00UpW0oL6P"
