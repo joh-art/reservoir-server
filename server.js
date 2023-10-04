@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const moment = require("moment");
+const jwt = require('jsonwebtoken');
 const app = express();
 const usersRoutes = require("./Routes/UsersRoutes");
 const Room = require("./Models/RoomModel");
@@ -56,9 +56,9 @@ app.use(express.json());
 
 // Include routes
 app.use("/users", usersRoutes);
+app.use("/protectRoute", usersRoutes);
 app.use("/rooms", Roomsroute);
 // Use route files
-
 // Define a route to get bookings by user ID
 
 app.post("/booking", async (req, res) => {

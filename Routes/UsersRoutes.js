@@ -17,7 +17,9 @@ router.put('/:id', UserControler.updateUserById);
 router.delete('/:id', UserControler.deleteUserById);
 router.get('/getUserById', UserControler.getUserById);
 router.get('/', UserControler.getAllUsers);
-  
+router.get('/protectRoute', UserControler.protectRoute);
+
+   
 module.exports = router;
 
 
